@@ -13,6 +13,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+export 'package:external_path/external_path.dart';
+export 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
 /// A package to save image and files to downloads folder.
 ///
 ///Example:

@@ -3,9 +3,38 @@ A package to save image and files to downloads folder.
 
 ## Features
 
-```
-FlutterSaver.saveImageWindowsWeb()
+You can use this code to save images on any platform.
 
+
+```dart
+FlutterSaver.saveImageWindowsWeb();
+
+```
+
+-Example
+
+```dart
+ await FlutterSaver.saveImageWindowsWeb(
+  fileImage: fileImage,
+   fileName: 'example',
+ type: 'jpg',
+ );
+```
+
+You can use this code to save images on any platform.
+
+```
+```
+
+-Example
+
+```dart
+ await FlutterSaver.saveFileAndroid(
+  "link file",
+  ExternalPath.getExternalStoragePublicDirectory(
+     ExternalPath.DIRECTORY_DOWNLOADS
+   )
+ );
 ```
 
 ## Getting started
@@ -28,6 +57,30 @@ dependencies:
 
 import 'package:flutter_saver/flutter_saver.dart';
 
+```
+
+
+- To request permissions from the user, you can use the following code: AndroidManifest.xml.
+
+```xml
+
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+```
+
+- Add this line code to application AndroidManifest.xml
+
+```xml
+android:requestLegacyExternalStorage="true"
+```
+
+```xml
+<application
+        android:label="avaterbetter"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
 ```
 
 ## Additional information
