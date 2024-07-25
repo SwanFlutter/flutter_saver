@@ -12,7 +12,20 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
-/// A Calculator.
+/// A package to save image and files to downloads folder.
+///
+///Example:
+/// ```dart
+///
+/// import 'package:flutter_saver/flutter_saver.dart';
+///
+/// await FlutterSaver.saveImageFile(
+///   fileImage: fileImage,
+///   fileName: 'example',
+///   type: 'jpg',
+/// );
+///```
+///
 class FlutterSaver {
   // save image file
   static Future<bool> saveImageFile({
@@ -31,25 +44,30 @@ class FlutterSaver {
       if (kIsWeb || Platform.isWindows) {
         Directory? downloadDirectoryWindows = await getDownloadsDirectory();
         filePath = '${downloadDirectoryWindows!.path}/$finalFilename.$type';
+        debugPrint("defaultPath: $filePath");
       } else {
         switch (Platform.operatingSystem) {
           case 'android':
             String? downloadDirectoryAndroid =
                 await AndroidPathProvider.downloadsPath;
             filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
+            debugPrint("defaultPath: $filePath");
             break;
           case 'ios':
             String? downloadDirectoryIos = await provider.getDownloadsPath();
             filePath = '$downloadDirectoryIos/$finalFilename.$type';
+            debugPrint("defaultPath: $filePath");
             break;
           case 'macos':
             String? downloadDirectoryMac = await provider.getDownloadsPath();
             filePath = '$downloadDirectoryMac/$finalFilename.$type';
+            debugPrint("defaultPath: $filePath");
             break;
           default:
             final Directory defaultDownloadDirectory =
                 Directory('/storage/emulated/0/Download');
             filePath = '${defaultDownloadDirectory.path}/$finalFilename.$type';
+            debugPrint("defaultPath: $filePath");
         }
       }
 
@@ -119,20 +137,23 @@ class FlutterSaver {
         downloadDirectory = await getDownloadsDirectory();
         filePath =
             File(path.join(downloadDirectory!.path, '$baseName$fileExtension'));
+        debugPrint("defaultPath: $filePath");
       } else {
         switch (Platform.operatingSystem) {
           case "android":
             filePath = File(
                 path.join(downloadDirectoryAndroid, '$baseName$fileExtension'));
-
+            debugPrint("defaultPath: $filePath");
             break;
           case "ios":
             filePath = File(
                 path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
+            debugPrint("defaultPath: $filePath");
             break;
           case "macos":
             filePath = File(
                 path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
+            debugPrint("defaultPath: $filePath");
             break;
 
           default:
@@ -140,6 +161,7 @@ class FlutterSaver {
                 Directory('/storage/emulated/0/Download');
             filePath = File(path.join(
                 defaultDownloadDirectory.path, '$baseName$fileExtension'));
+            debugPrint("defaultPath: $filePath");
         }
       }
 
