@@ -82,6 +82,74 @@ class FlutterSaver {
 
 // save all file
 
+// save image file
+  static Future<bool> saveFileWindowsWeb(String link) async {
+    File? filePath;
+    Directory? downloadDirectory = await getDownloadsDirectory();
+
+    try {
+      var response = await http.get(Uri.parse(link));
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load image: ${response.statusCode}');
+      }
+
+      String fileName = path.basename(link);
+      // ignore: unused_local_variable
+      String extension = path.extension(fileName);
+      String baseName = path.basenameWithoutExtension(fileName);
+
+      Map<String, String> fileExtensions = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'video/mp4': '.mp4',
+        'application/pdf': '.pdf',
+        'application/zip': '.zip',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'image/vnd.microsoft.icon': '.ico',
+        'image/vnd.djvu': '.djvu',
+        'image/vnd.adobe.photoshop': '.psd',
+        'image/x-ms-bmp': '.bmp',
+        'image/x-icon': '.ico',
+        'image/x-ico': '.ico',
+        'image/x-xbitmap': '.xbm',
+        'image/x-png': '.png',
+        'application/x-msdownload': '.exe',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            '.pptx',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            '.docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            '.xlsx',
+        '.dwg': '.dwg',
+      };
+
+      String fileExtension =
+          fileExtensions[response.headers['content-type']] ?? '.png';
+
+      if (kIsWeb || Platform.isWindows) {
+        downloadDirectory = await getDownloadsDirectory();
+        filePath =
+            File(path.join(downloadDirectory!.path, '$baseName$fileExtension'));
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Platform not supported');
+      }
+
+      await filePath.writeAsBytes(response.bodyBytes);
+      return true;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Error during image download: $e');
+        print('Stack Trace: $stackTrace');
+      }
+      return false;
+    }
+  }
+
   static Future<bool> saveAllFilesNetwork(String imageLink) async {
     final PathProviderPlatform provider = PathProviderPlatform.instance;
 
