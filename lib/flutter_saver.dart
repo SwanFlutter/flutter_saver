@@ -20,7 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 ///
 /// import 'package:flutter_saver/flutter_saver.dart';
 ///
-/// await FlutterSaver.saveImageFile(
+/// await FlutterSaver.saveImageWindowsWeb(
 ///   fileImage: fileImage,
 ///   fileName: 'example',
 ///   type: 'jpg',
@@ -29,13 +29,13 @@ import 'package:permission_handler/permission_handler.dart';
 ///
 class FlutterSaver {
   // save image file
-  static Future<bool> saveImageFile({
+
+  static Future<bool> saveImageWindowsWeb({
     required File fileImage,
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
   }) async {
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
     String filePath = '';
     String localFileName = "iamage_$randomFileName(lengthFileName)";
 
@@ -47,30 +47,7 @@ class FlutterSaver {
         filePath = '${downloadDirectoryWindows!.path}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
-        switch (Platform.operatingSystem) {
-          case 'android':
-            String? downloadDirectoryAndroid =
-                await ExternalPath.getExternalStoragePublicDirectory(
-                    ExternalPath.DIRECTORY_DOWNLOADS);
-            filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
-            debugPrint("defaultPath: $filePath");
-            break;
-          case 'ios':
-            String? downloadDirectoryIos = await provider.getDownloadsPath();
-            filePath = '$downloadDirectoryIos/$finalFilename.$type';
-            debugPrint("defaultPath: $filePath");
-            break;
-          case 'macos':
-            String? downloadDirectoryMac = await provider.getDownloadsPath();
-            filePath = '$downloadDirectoryMac/$finalFilename.$type';
-            debugPrint("defaultPath: $filePath");
-            break;
-          default:
-            final Directory defaultDownloadDirectory =
-                Directory('/storage/emulated/0/Download');
-            filePath = '${defaultDownloadDirectory.path}/$finalFilename.$type';
-            debugPrint("defaultPath: $filePath");
-        }
+        throw Exception('Error saving image: $e');
       }
 
       await fileImage.copy(filePath);
@@ -81,10 +58,107 @@ class FlutterSaver {
     }
   }
 
-// save all file
+  static Future<bool> saveImageAndroid({
+    required File fileImage,
+    int lengthFileName = 5,
+    String? fileName,
+    String? type = 'jpg',
+    ExternalPath? pathDir,
+  }) async {
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      throw Exception('Storage permission not granted');
+    }
+    String filePath = '';
+    String localFileName = "iamage_$randomFileName(lengthFileName)";
 
-// save image file
-  static Future<bool> saveFileWindowsWeb(String link) async {
+    String finalFilename = fileName ?? localFileName;
+
+    try {
+      if (Platform.isAndroid) {
+        var downloadDirectoryAndroid = pathDir ??
+            await ExternalPath.getExternalStoragePublicDirectory(
+                ExternalPath.DIRECTORY_DOWNLOADS);
+        filePath =
+            '${downloadDirectoryAndroid.toString()}/$finalFilename.$type';
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Error saving image: $e');
+      }
+
+      await fileImage.copy(filePath);
+      return true;
+    } catch (e) {
+      debugPrint('Error saving image: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> saveImageIos(
+      {required File fileImage,
+      int lengthFileName = 5,
+      String? fileName,
+      String? type = 'jpg',
+      PathProviderPlatform? pathDir}) async {
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      throw Exception('Storage permission not granted');
+    }
+    final PathProviderPlatform provider = PathProviderPlatform.instance;
+    String filePath = '';
+    String localFileName = "iamage_$randomFileName(lengthFileName)";
+
+    String finalFilename = fileName ?? localFileName;
+
+    try {
+      if (Platform.isIOS) {
+        var downloadDirectoryIos = pathDir ?? await provider.getDownloadsPath();
+        filePath = '${downloadDirectoryIos.toString()}/$finalFilename.$type';
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Error saving image: $e');
+      }
+
+      await fileImage.copy(filePath);
+      return true;
+    } catch (e) {
+      debugPrint('Error saving image: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> saveImageMacOs(
+      {required File fileImage,
+      int lengthFileName = 5,
+      String? fileName,
+      String? type = 'jpg',
+      PathProviderPlatform? pathDir}) async {
+    final PathProviderPlatform provider = PathProviderPlatform.instance;
+    String filePath = '';
+    String localFileName = "iamage_$randomFileName(lengthFileName)";
+
+    String finalFilename = fileName ?? localFileName;
+
+    try {
+      if (Platform.isMacOS) {
+        var downloadDirectoryMac = pathDir ?? await provider.getDownloadsPath();
+        filePath = '${downloadDirectoryMac.toString()}/$finalFilename.$type';
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Error saving image: $e');
+      }
+
+      await fileImage.copy(filePath);
+      return true;
+    } catch (e) {
+      debugPrint('Error saving image: $e');
+      return false;
+    }
+  }
+
+// save all file//
+
+  static Future<bool> saveFileWindowsWeb({required String link}) async {
     File? filePath;
     Directory? downloadDirectory = await getDownloadsDirectory();
 
@@ -230,7 +304,11 @@ class FlutterSaver {
 
   // save all file ios
   static Future<bool> saveFileIos(
-      String link, PathProviderPlatform? pathDir) async {
+      {required String link, PathProviderPlatform? pathDir}) async {
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      throw Exception('Storage permission not granted');
+    }
     final PathProviderPlatform provider = PathProviderPlatform.instance;
     File? filePath;
     // ignore: unnecessary_null_comparison
@@ -299,11 +377,11 @@ class FlutterSaver {
     }
   }
 
-  static Future<bool> saveFile(String link) async {
+  static Future<bool> saveFileMac(
+      {required String link, PathProviderPlatform? pathDir}) async {
+    final PathProviderPlatform provider = PathProviderPlatform.instance;
     File? filePath;
-    String? downloadDirectoryAndroid =
-        await ExternalPath.getExternalStoragePublicDirectory(
-            ExternalPath.DIRECTORY_DOWNLOADS);
+    var downloadDirectoryMac = pathDir ?? await provider.getDownloadsPath();
 
     try {
       var response = await http.get(Uri.parse(link));
@@ -349,108 +427,11 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isAndroid) {
-        filePath = File(
-            path.join(downloadDirectoryAndroid, '$baseName$fileExtension'));
+        filePath = File(path.join(
+            downloadDirectoryMac.toString(), '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
-      }
-
-      await filePath.writeAsBytes(response.bodyBytes);
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        print('Error during image download: $e');
-        print('Stack Trace: $stackTrace');
-      }
-      return false;
-    }
-  }
-
-  static Future<bool> saveAllFilesNetwork(String imageLink) async {
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
-
-    File? filePath;
-    Directory? downloadDirectory = await getDownloadsDirectory();
-    String? downloadDirectoryAndroid =
-        await ExternalPath.getExternalStoragePublicDirectory(
-            ExternalPath.DIRECTORY_DOWNLOADS);
-    String? downloadDirectoryIos = await provider.getDownloadsPath();
-    String? downloadDirectoryMac = await provider.getDownloadsPath();
-
-    try {
-      var response = await http.get(Uri.parse(imageLink));
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to load image: ${response.statusCode}');
-      }
-
-      String fileName = path.basename(imageLink);
-      // ignore: unused_local_variable
-      String extension = path.extension(fileName);
-      String baseName = path.basenameWithoutExtension(fileName);
-
-      Map<String, String> fileExtensions = {
-        'image/jpeg': '.jpg',
-        'image/png': '.png',
-        'video/mp4': '.mp4',
-        'application/pdf': '.pdf',
-        'application/zip': '.zip',
-        'image/gif': '.gif',
-        'image/webp': '.webp',
-        'image/svg+xml': '.svg',
-        'image/tiff': '.tiff',
-        'image/vnd.microsoft.icon': '.ico',
-        'image/vnd.djvu': '.djvu',
-        'image/vnd.adobe.photoshop': '.psd',
-        'image/x-ms-bmp': '.bmp',
-        'image/x-icon': '.ico',
-        'image/x-ico': '.ico',
-        'image/x-xbitmap': '.xbm',
-        'image/x-png': '.png',
-        'application/x-msdownload': '.exe',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-            '.pptx',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            '.docx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-            '.xlsx',
-        '.dwg': '.dwg',
-      };
-
-      String fileExtension =
-          fileExtensions[response.headers['content-type']] ?? '.png';
-
-      if (kIsWeb || Platform.isWindows) {
-        downloadDirectory = await getDownloadsDirectory();
-        filePath =
-            File(path.join(downloadDirectory!.path, '$baseName$fileExtension'));
-        debugPrint("defaultPath: $filePath");
-      } else {
-        switch (Platform.operatingSystem) {
-          case "android":
-            filePath = File(
-                path.join(downloadDirectoryAndroid, '$baseName$fileExtension'));
-            debugPrint("defaultPath: $filePath");
-            break;
-          case "ios":
-            filePath = File(
-                path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
-            debugPrint("defaultPath: $filePath");
-            break;
-          case "macos":
-            filePath = File(
-                path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
-            debugPrint("defaultPath: $filePath");
-            break;
-
-          default:
-            final Directory defaultDownloadDirectory =
-                Directory('/storage/emulated/0/Download');
-            filePath = File(path.join(
-                defaultDownloadDirectory.path, '$baseName$fileExtension'));
-            debugPrint("defaultPath: $filePath");
-        }
       }
 
       await filePath.writeAsBytes(response.bodyBytes);
