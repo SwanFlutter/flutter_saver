@@ -1,5 +1,5 @@
 
-A package to save image and files to downloads folder.
+A package to save image and files to downloads folder all platform.
 
 ## Features
 
@@ -7,7 +7,10 @@ You can use this code to save images on any platform.
 
 
 ```dart
-FlutterSaver.saveImageWindowsWeb();
+FlutterSaver.saveImageWindowsWeb(fileImage: fileImage);
+FlutterSaver.saveImageAndroid(fileImage: fileImage);
+FlutterSaver.saveImageIos(fileImage: fileImage);
+FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```
 
@@ -23,18 +26,37 @@ FlutterSaver.saveImageWindowsWeb();
 
 You can use this code to save images on any platform.
 
-```
+```dart
+ FlutterSaver.saveFileWindowsWeb(link: link);
+ FlutterSaver.saveFileAndroid(link: link);
+ FlutterSaver.saveFileIos(link: link);
+ FlutterSaver.saveFileMac(link: link);
 ```
 
 -Example
 
 ```dart
- await FlutterSaver.saveFileAndroid(
-  "link file",
-  ExternalPath.getExternalStoragePublicDirectory(
-     ExternalPath.DIRECTORY_DOWNLOADS
-   )
- );
+  GestureDetector(
+              onTap: () async {
+                Future<bool> isSaved = FlutterSaver.saveFileAndroid(
+                    link:
+                        "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp");
+
+                if (await isSaved) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Image saved successfully!')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to save image.')),
+                  );
+                }
+              },
+       child: Image.network(
+       width: 300,
+        height: 450,
+     "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp"),
+   ),
 ```
 
 ## Getting started

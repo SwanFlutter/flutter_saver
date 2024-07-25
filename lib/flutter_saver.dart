@@ -16,11 +16,10 @@ import 'package:permission_handler/permission_handler.dart';
 export 'package:external_path/external_path.dart';
 export 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
-/// A package to save image and files to downloads folder.
+//// A package to save images and files to the downloads folder.
 ///
-///Example:
+/// Example:
 /// ```dart
-///
 /// import 'package:flutter_saver/flutter_saver.dart';
 ///
 /// await FlutterSaver.saveImageWindowsWeb(
@@ -28,11 +27,17 @@ export 'package:path_provider_platform_interface/path_provider_platform_interfac
 ///   fileName: 'example',
 ///   type: 'jpg',
 /// );
-///```
-///
+/// ```
 class FlutterSaver {
-  // save image file
-
+  /// Saves an image file to the downloads folder for Windows or Web.
+  ///
+  /// Parameters:
+  /// - [fileImage]: The image file to be saved.
+  /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
+  /// - [fileName]: Optional custom file name.
+  /// - [type]: The file extension/type (default is 'jpg').
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageWindowsWeb({
     required File fileImage,
     int lengthFileName = 5,
@@ -61,6 +66,16 @@ class FlutterSaver {
     }
   }
 
+  /// Saves an image file to the downloads folder for Android.
+  ///
+  /// Parameters:
+  /// - [fileImage]: The image file to be saved.
+  /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
+  /// - [fileName]: Optional custom file name.
+  /// - [type]: The file extension/type (default is 'jpg').
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageAndroid({
     required File fileImage,
     int lengthFileName = 5,
@@ -97,6 +112,16 @@ class FlutterSaver {
     }
   }
 
+  /// Saves an image file to the downloads folder for iOS.
+  ///
+  /// Parameters:
+  /// - [fileImage]: The image file to be saved.
+  /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
+  /// - [fileName]: Optional custom file name.
+  /// - [type]: The file extension/type (default is 'jpg').
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageIos(
       {required File fileImage,
       int lengthFileName = 5,
@@ -130,6 +155,16 @@ class FlutterSaver {
     }
   }
 
+  /// Saves an image file to the downloads folder for Mac.
+  ///
+  /// Parameters:
+  /// - [fileImage]: The image file to be saved.
+  /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
+  /// - [fileName]: Optional custom file name.
+  /// - [type]: The file extension/type (default is 'jpg').
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageMacOs(
       {required File fileImage,
       int lengthFileName = 5,
@@ -159,8 +194,12 @@ class FlutterSaver {
     }
   }
 
-// save all file//
-
+  /// Saves any file from a URL to the downloads folder for Windows or Web.
+  ///
+  /// Parameters:
+  /// - [link]: The URL of the file to be downloaded.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileWindowsWeb({required String link}) async {
     File? filePath;
     Directory? downloadDirectory = await getDownloadsDirectory();
@@ -227,8 +266,13 @@ class FlutterSaver {
     }
   }
 
-  // save all file android
-
+  /// Saves any file from a URL to the downloads folder for Android.
+  ///
+  /// Parameters:
+  /// - [link]: The URL of the file to be downloaded.
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileAndroid({
     required String link,
     ExternalPath? pathDir,
@@ -305,7 +349,13 @@ class FlutterSaver {
     }
   }
 
-  // save all file ios
+  /// Saves any file from a URL to the downloads folder for iOS.
+  ///
+  /// Parameters:
+  /// - [link]: The URL of the file to be downloaded.
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileIos(
       {required String link, PathProviderPlatform? pathDir}) async {
     var status = await Permission.storage.request();
@@ -380,6 +430,13 @@ class FlutterSaver {
     }
   }
 
+  /// Saves any file from a URL to the downloads folder for Mac.
+  ///
+  /// Parameters:
+  /// - [link]: The URL of the file to be downloaded.
+  /// - [pathDir]: Optional custom download directory path.
+  ///
+  /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileMac(
       {required String link, PathProviderPlatform? pathDir}) async {
     final PathProviderPlatform provider = PathProviderPlatform.instance;
@@ -449,6 +506,12 @@ class FlutterSaver {
   }
 }
 
+/// Generates a random file name with a given length.
+///
+/// Parameters:
+/// - [length]: The length of the random file name.
+///
+/// Returns a randomly generated file name.
 List<String> randomFileName(int length) {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   final random = Random();
