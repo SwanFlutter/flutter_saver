@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// A package to save image and files to downloads folder.
 ///
@@ -153,6 +154,10 @@ class FlutterSaver {
 
   static Future<bool> saveFileAndroid(
       String link, ExternalPath? pathDir) async {
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      throw Exception('Storage permission not granted');
+    }
     File? filePath;
 
     var downloadDirectoryAndroid = pathDir ??
