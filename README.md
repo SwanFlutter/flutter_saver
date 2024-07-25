@@ -3,8 +3,9 @@ A package to save image and files to downloads folder all platform.
 
 ## Features
 
-You can use this code to save images on any platform.
+- You can use this code to save images on any platform.
 
+- use for local image
 
 ```dart
 FlutterSaver.saveImageWindowsWeb(fileImage: fileImage);
@@ -24,7 +25,9 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
  );
 ```
 
-You can use this code to save images on any platform.
+- You can use this code to save images on any platform.
+
+- use for Network
 
 ```dart
  FlutterSaver.saveFileWindowsWeb(link: link);
@@ -59,11 +62,43 @@ You can use this code to save images on any platform.
    ),
 ```
 
+- suport this format
+
+```dart
+{
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'video/mp4': '.mp4',
+        'application/pdf': '.pdf',
+        'application/zip': '.zip',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'image/vnd.microsoft.icon': '.ico',
+        'image/vnd.djvu': '.djvu',
+        'image/vnd.adobe.photoshop': '.psd',
+        'image/x-ms-bmp': '.bmp',
+        'image/x-icon': '.ico',
+        'image/x-ico': '.ico',
+        'image/x-xbitmap': '.xbm',
+        'image/x-png': '.png',
+        'application/x-msdownload': '.exe',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            '.pptx',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            '.docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            '.xlsx',
+        '.dwg': '.dwg',
+      };
+```
+
 ## Getting started
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.6
+  flutter_saver: ^0.0.1
 ```
 
 ```yaml
