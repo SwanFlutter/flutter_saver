@@ -4,7 +4,7 @@ version: 0.0.1
 homepage: "https://github.com/SwanFlutter/flutter_saver"
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: '>=2.19.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
