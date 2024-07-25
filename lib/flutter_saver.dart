@@ -5,7 +5,7 @@ library flutter_saver;
 import 'dart:io';
 import 'dart:math';
 
-import 'package:android_path_provider/android_path_provider.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -49,7 +49,8 @@ class FlutterSaver {
         switch (Platform.operatingSystem) {
           case 'android':
             String? downloadDirectoryAndroid =
-                await AndroidPathProvider.downloadsPath;
+                await ExternalPath.getExternalStoragePublicDirectory(
+                    ExternalPath.DIRECTORY_DOWNLOADS);
             filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
             debugPrint("defaultPath: $filePath");
             break;
@@ -86,7 +87,9 @@ class FlutterSaver {
 
     File? filePath;
     Directory? downloadDirectory = await getDownloadsDirectory();
-    String? downloadDirectoryAndroid = await AndroidPathProvider.downloadsPath;
+    String? downloadDirectoryAndroid =
+        await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS);
     String? downloadDirectoryIos = await provider.getDownloadsPath();
     String? downloadDirectoryMac = await provider.getDownloadsPath();
 
