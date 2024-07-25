@@ -131,9 +131,219 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (kIsWeb || Platform.isWindows) {
-        downloadDirectory = await getDownloadsDirectory();
         filePath =
             File(path.join(downloadDirectory!.path, '$baseName$fileExtension'));
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Platform not supported');
+      }
+
+      await filePath.writeAsBytes(response.bodyBytes);
+      return true;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Error during image download: $e');
+        print('Stack Trace: $stackTrace');
+      }
+      return false;
+    }
+  }
+
+  // save all file android
+
+  static Future<bool> saveFileAndroid(
+      String link, ExternalPath? pathDir) async {
+    File? filePath;
+
+    var downloadDirectoryAndroid = pathDir ??
+        await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS);
+
+    try {
+      var response = await http.get(Uri.parse(link));
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load image: ${response.statusCode}');
+      }
+
+      String fileName = path.basename(link);
+      // ignore: unused_local_variable
+      String extension = path.extension(fileName);
+      String baseName = path.basenameWithoutExtension(fileName);
+
+      Map<String, String> fileExtensions = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'video/mp4': '.mp4',
+        'application/pdf': '.pdf',
+        'application/zip': '.zip',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'image/vnd.microsoft.icon': '.ico',
+        'image/vnd.djvu': '.djvu',
+        'image/vnd.adobe.photoshop': '.psd',
+        'image/x-ms-bmp': '.bmp',
+        'image/x-icon': '.ico',
+        'image/x-ico': '.ico',
+        'image/x-xbitmap': '.xbm',
+        'image/x-png': '.png',
+        'application/x-msdownload': '.exe',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            '.pptx',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            '.docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            '.xlsx',
+        '.dwg': '.dwg',
+      };
+
+      String fileExtension =
+          fileExtensions[response.headers['content-type']] ?? '.png';
+
+      if (Platform.isAndroid) {
+        filePath = File(path.join(
+            downloadDirectoryAndroid.toString(), '$baseName$fileExtension'));
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Platform not supported');
+      }
+
+      await filePath.writeAsBytes(response.bodyBytes);
+      return true;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Error during image download: $e');
+        print('Stack Trace: $stackTrace');
+      }
+      return false;
+    }
+  }
+
+  // save all file ios
+  static Future<bool> saveFileIos(
+      String link, PathProviderPlatform? pathDir) async {
+    final PathProviderPlatform provider = PathProviderPlatform.instance;
+    File? filePath;
+    // ignore: unnecessary_null_comparison
+
+    var downloadDirectoryIos = pathDir ?? await provider.getDownloadsPath();
+
+    try {
+      var response = await http.get(Uri.parse(link));
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load image: ${response.statusCode}');
+      }
+
+      String fileName = path.basename(link);
+      // ignore: unused_local_variable
+      String extension = path.extension(fileName);
+      String baseName = path.basenameWithoutExtension(fileName);
+
+      Map<String, String> fileExtensions = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'video/mp4': '.mp4',
+        'application/pdf': '.pdf',
+        'application/zip': '.zip',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'image/vnd.microsoft.icon': '.ico',
+        'image/vnd.djvu': '.djvu',
+        'image/vnd.adobe.photoshop': '.psd',
+        'image/x-ms-bmp': '.bmp',
+        'image/x-icon': '.ico',
+        'image/x-ico': '.ico',
+        'image/x-xbitmap': '.xbm',
+        'image/x-png': '.png',
+        'application/x-msdownload': '.exe',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            '.pptx',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            '.docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            '.xlsx',
+        '.dwg': '.dwg',
+      };
+
+      String fileExtension =
+          fileExtensions[response.headers['content-type']] ?? '.png';
+
+      if (Platform.isAndroid) {
+        filePath = File(path.join(
+            downloadDirectoryIos.toString(), '$baseName$fileExtension'));
+        debugPrint("defaultPath: $filePath");
+      } else {
+        throw Exception('Platform not supported');
+      }
+
+      await filePath.writeAsBytes(response.bodyBytes);
+      return true;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Error during image download: $e');
+        print('Stack Trace: $stackTrace');
+      }
+      return false;
+    }
+  }
+
+  static Future<bool> saveFile(String link) async {
+    File? filePath;
+    String? downloadDirectoryAndroid =
+        await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS);
+
+    try {
+      var response = await http.get(Uri.parse(link));
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load image: ${response.statusCode}');
+      }
+
+      String fileName = path.basename(link);
+      // ignore: unused_local_variable
+      String extension = path.extension(fileName);
+      String baseName = path.basenameWithoutExtension(fileName);
+
+      Map<String, String> fileExtensions = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'video/mp4': '.mp4',
+        'application/pdf': '.pdf',
+        'application/zip': '.zip',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'image/vnd.microsoft.icon': '.ico',
+        'image/vnd.djvu': '.djvu',
+        'image/vnd.adobe.photoshop': '.psd',
+        'image/x-ms-bmp': '.bmp',
+        'image/x-icon': '.ico',
+        'image/x-ico': '.ico',
+        'image/x-xbitmap': '.xbm',
+        'image/x-png': '.png',
+        'application/x-msdownload': '.exe',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            '.pptx',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            '.docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            '.xlsx',
+        '.dwg': '.dwg',
+      };
+
+      String fileExtension =
+          fileExtensions[response.headers['content-type']] ?? '.png';
+
+      if (Platform.isAndroid) {
+        filePath = File(
+            path.join(downloadDirectoryAndroid, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
