@@ -152,7 +152,7 @@ class FlutterSaver {
   // save all file android
 
   static Future<bool> saveFileAndroid(
-      {required String link, ExternalPath? pathDir}) async {
+      String link, ExternalPath? pathDir) async {
     File? filePath;
 
     var downloadDirectoryAndroid = pathDir ??
