@@ -152,8 +152,10 @@ class FlutterSaver {
 
   // save all file android
 
-  static Future<bool> saveFileAndroid(
-      String link, ExternalPath? pathDir) async {
+  static Future<bool> saveFileAndroid({
+    required String link,
+    ExternalPath? pathDir,
+  }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       throw Exception('Storage permission not granted');
