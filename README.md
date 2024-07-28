@@ -140,6 +140,25 @@ android:requestLegacyExternalStorage="true"
         android:requestLegacyExternalStorage="true">
 ```
 
+### iOS
+
+```xml
+     <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to select images for editing.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to your camera to take photos for editing.</string>
+```
+
+#### macOS installation
+
+Since the macOS implementation uses `file_selector`, you will need to
+add a filesystem access
+[entitlement](https://docs.flutter.dev/platform-integration/macos/building#entitlements-and-the-app-sandbox):
+```xml
+  <key>com.apple.security.files.user-selected.read-only</key>
+  <true/>
+```
+
 ## Additional information
 
 If you have any issues, questions, or suggestions related to this package, please feel free to contact us at [swan.dev1993@gmail.com](mailto:swan.dev1993@gmail.com). We welcome your feedback and will do our best to address any problems or provide assistance.
