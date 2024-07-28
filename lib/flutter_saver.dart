@@ -411,7 +411,7 @@ class FlutterSaver {
       String fileExtension =
           fileExtensions[response.headers['content-type']] ?? '.png';
 
-      if (Platform.isAndroid) {
+      if (Platform.isIOS) {
         filePath = File(path.join(
             downloadDirectoryIos.toString(), '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
@@ -486,7 +486,7 @@ class FlutterSaver {
       String fileExtension =
           fileExtensions[response.headers['content-type']] ?? '.png';
 
-      if (Platform.isAndroid) {
+      if (Platform.isMacOS) {
         filePath = File(path.join(
             downloadDirectoryMac.toString(), '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
