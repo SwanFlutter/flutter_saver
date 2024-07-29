@@ -356,17 +356,16 @@ class FlutterSaver {
   /// - [pathDir]: Optional custom download directory path.
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
-  static Future<bool> saveFileIos(
-      {required String link, PathProviderPlatform? pathDir}) async {
+  static Future<bool> saveFileIos({
+    required String link,
+  }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       throw Exception('Storage permission not granted');
     }
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
+    final Directory downloadDirectoryIos =
+        await getApplicationDocumentsDirectory();
     File? filePath;
-    // ignore: unnecessary_null_comparison
-
-    var downloadDirectoryIos = pathDir ?? await provider.getDownloadsPath();
 
     try {
       var response = await http.get(Uri.parse(link));
@@ -412,8 +411,8 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isIOS) {
-        filePath = File(path.join(
-            downloadDirectoryIos.toString(), '$baseName$fileExtension'));
+        filePath = File(
+            path.join(downloadDirectoryIos.path, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
@@ -437,11 +436,11 @@ class FlutterSaver {
   /// - [pathDir]: Optional custom download directory path.
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
-  static Future<bool> saveFileMac(
-      {required String link, PathProviderPlatform? pathDir}) async {
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
+  static Future<bool> saveFileMac({
+    required String link,
+  }) async {
+    final Directory? downloadDirectoryMac = await getDownloadsDirectory();
     File? filePath;
-    var downloadDirectoryMac = pathDir ?? await provider.getDownloadsPath();
 
     try {
       var response = await http.get(Uri.parse(link));
@@ -487,8 +486,8 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isMacOS) {
-        filePath = File(path.join(
-            downloadDirectoryMac.toString(), '$baseName$fileExtension'));
+        filePath = File(
+            path.join(downloadDirectoryMac!.path, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
