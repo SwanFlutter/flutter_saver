@@ -39,7 +39,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageWindowsWeb({
-    required File fileImage,
+    File? fileImage,
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
@@ -58,7 +58,7 @@ class FlutterSaver {
         throw Exception('Error saving image: $e');
       }
 
-      await fileImage.copy(filePath);
+      await fileImage!.copy(filePath);
       return true;
     } catch (e) {
       debugPrint('Error saving image: $e');
@@ -122,7 +122,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageIos(
-      {required File fileImage,
+      {File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
@@ -146,7 +146,7 @@ class FlutterSaver {
         throw Exception('Error saving image: $e');
       }
 
-      await fileImage.copy(filePath);
+      await fileImage!.copy(filePath);
       return true;
     } catch (e) {
       debugPrint('Error saving image: $e');
@@ -165,7 +165,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageMacOs(
-      {required File fileImage,
+      {File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
@@ -185,7 +185,7 @@ class FlutterSaver {
         throw Exception('Error saving image: $e');
       }
 
-      await fileImage.copy(filePath);
+      await fileImage!.copy(filePath);
       return true;
     } catch (e) {
       debugPrint('Error saving image: $e');
