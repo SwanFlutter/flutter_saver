@@ -5,7 +5,7 @@ library flutter_saver;
 import 'dart:io';
 import 'dart:math';
 
-import 'package:external_path/external_path.dart';
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-export 'package:external_path/external_path.dart';
+export 'package:android_path_provider/android_path_provider.dart';
 export 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 //// A package to save images and files to the downloads folder.
@@ -81,7 +81,7 @@ class FlutterSaver {
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
-    ExternalPath? pathDir,
+    AndroidPathProvider? pathDir,
   }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -94,11 +94,10 @@ class FlutterSaver {
 
     try {
       if (Platform.isAndroid) {
-        var downloadDirectoryAndroid = pathDir ??
-            await ExternalPath.getExternalStoragePublicDirectory(
-                ExternalPath.DIRECTORY_DOWNLOADS);
-        filePath =
-            '${downloadDirectoryAndroid.toString()}/$finalFilename.$type';
+        var downloadDirectoryAndroid =
+            pathDir ?? await AndroidPathProvider.downloadsPath;
+
+        filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Error saving image: $e');
@@ -275,7 +274,7 @@ class FlutterSaver {
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileAndroid({
     required String link,
-    ExternalPath? pathDir,
+    AndroidPathProvider? pathDir,
   }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -283,9 +282,8 @@ class FlutterSaver {
     }
     File? filePath;
 
-    var downloadDirectoryAndroid = pathDir ??
-        await ExternalPath.getExternalStoragePublicDirectory(
-            ExternalPath.DIRECTORY_DOWNLOADS);
+    var downloadDirectoryAndroid =
+        pathDir ?? await AndroidPathProvider.downloadsPath;
 
     try {
       var response = await http.get(Uri.parse(link));
