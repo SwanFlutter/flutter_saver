@@ -39,7 +39,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageWindowsWeb({
-    File? fileImage,
+    required File? fileImage,
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
@@ -77,7 +77,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageAndroid({
-    File? fileImage,
+    required File? fileImage,
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
@@ -122,7 +122,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageIos(
-      {File? fileImage,
+      {required File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
@@ -165,7 +165,7 @@ class FlutterSaver {
   ///
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageMacOs(
-      {File? fileImage,
+      {required File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
