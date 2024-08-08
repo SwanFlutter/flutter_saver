@@ -88,7 +88,7 @@ class FlutterSaver {
       throw Exception('Storage permission not granted');
     }
     String filePath = '';
-    String localFileName = "iamage_$randomFileName($lengthFileName)";
+    String localFileName = "image_${randomFileName(lengthFileName)}";
 
     String finalFilename = fileName ?? localFileName;
 
@@ -100,7 +100,7 @@ class FlutterSaver {
         filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
-        throw Exception('Error saving image: $e');
+        throw Exception('Error saving image: Unsupported platform');
       }
 
       await fileImage!.copy(filePath);
@@ -509,9 +509,11 @@ class FlutterSaver {
 /// - [length]: The length of the random file name.
 ///
 /// Returns a randomly generated file name.
-List<String> randomFileName(int length) {
+String randomFileName(int length) {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   final random = Random();
-  return List.generate(
-      chars.length, (index) => chars[random.nextInt(chars.length)]);
+  return String.fromCharCodes(
+    Iterable.generate(
+        length, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+  );
 }
