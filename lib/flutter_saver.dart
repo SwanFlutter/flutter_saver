@@ -88,7 +88,7 @@ class FlutterSaver {
       throw Exception('Storage permission not granted');
     }
     String filePath = '';
-    String localFileName = "iamage_$randomFileName";
+    String localFileName = "iamage_$randomFileName($lengthFileName)";
 
     String finalFilename = fileName ?? localFileName;
 
