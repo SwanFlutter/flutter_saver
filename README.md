@@ -1,5 +1,5 @@
 
-A package to save image and files to downloads folder all platform.
+This Flutter package provides a powerful and versatile solution for saving camera images and downloadable links across all platforms. With support for various formats, it allows developers to store images and files efficiently in device memory.
 
 ## Features
 

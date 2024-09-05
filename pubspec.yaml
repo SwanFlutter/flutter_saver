@@ -1,5 +1,5 @@
 name: flutter_saver
-description: "A package to save image and files to downloads folder all platform."
+description: "This Flutter package provides a powerful and versatile solution for saving camera images and downloadable links across all platforms. With support for various formats, it allows developers to store images and files efficiently in device memory."
 version: 0.0.1
 homepage: "https://github.com/SwanFlutter/flutter_saver"
 
@@ -15,10 +15,8 @@ dependencies:
   http: ^1.2.2
   path_provider: ^2.1.3
   permission_handler: ^11.3.1
-  android_path_provider: ^0.3.0
-  external_path_ios_mac:
-      git:
-        url: https://github.com/SwanFlutter/external_path_ios_mac.git
+  external_path: ^2.0.1
+  external_path_ios_mac: ^0.0.1
   
 
 dev_dependencies:

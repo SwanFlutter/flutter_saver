@@ -5,16 +5,17 @@ library flutter_saver;
 import 'dart:io';
 import 'dart:math';
 
-import 'package:android_path_provider/android_path_provider.dart';
+import 'package:external_path/external_path.dart';
+import 'package:external_path_ios_mac/external_path_ios_mac.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 
-export 'package:android_path_provider/android_path_provider.dart';
-export 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+export 'package:external_path/external_path.dart';
+export 'package:external_path_ios_mac/external_path_ios_mac.dart';
 
 //// A package to save images and files to the downloads folder.
 ///
@@ -45,7 +46,7 @@ class FlutterSaver {
     String? type = 'jpg',
   }) async {
     String filePath = '';
-    String localFileName = "iamage_$randomFileName(lengthFileName)";
+    String localFileName = "image_$randomFileName(lengthFileName)";
 
     String finalFilename = fileName ?? localFileName;
 
@@ -73,15 +74,17 @@ class FlutterSaver {
   /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
   /// - [fileName]: Optional custom file name.
   /// - [type]: The file extension/type (default is 'jpg').
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] : ExternalPath.DIRECTORY_MUSIC , ExternalPath.DIRECTORY_PODCASTS , ExternalPath.DIRECTORY_RINGTONES , ExternalPath.DIRECTORY_ALARMS , ExternalPath.DIRECTORY_NOTIFICATIONS
+  ///   ExternalPath.DIRECTORY_PICTURES , ExternalPath.DIRECTORY_MOVIES , ExternalPath.DIRECTORY_DOWNLOADS , ExternalPath.DIRECTORY_DCIM , ExternalPath.DIRECTORY_DOCUMENTS
+  ///   ExternalPath.DIRECTORY_SCREENSHOTS , ExternalPath.DIRECTORY_AUDIOBOOKS.
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageAndroid({
     required File? fileImage,
     int lengthFileName = 5,
     String? fileName,
     String? type = 'jpg',
-    AndroidPathProvider? pathDir,
+    String? pathDirectory,
   }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -95,7 +98,8 @@ class FlutterSaver {
     try {
       if (Platform.isAndroid) {
         var downloadDirectoryAndroid =
-            pathDir ?? await AndroidPathProvider.downloadsPath;
+            await ExternalPath.getExternalStoragePublicDirectory(
+                pathDirectory ?? ExternalPath.DIRECTORY_DOWNLOADS);
 
         filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
@@ -118,28 +122,29 @@ class FlutterSaver {
   /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
   /// - [fileName]: Optional custom file name.
   /// - [type]: The file extension/type (default is 'jpg').
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] :
+  ///   'DIRECTORY_DOWNLOADS' , 'DIRECTORY_MUSIC', 'DIRECTORY_PODCASTS' , 'DIRECTORY_RINGTONES' , 'DIRECTORY_ALARMS' , 'DIRECTORY_NOTIFICATIONS' , 'DIRECTORY_PICTURES' , 'DIRECTORY_MOVIES' , 'DIRECTORY_DCIM' , 'DIRECTORY_DOCUMENTS', 'DIRECTORY_SCREENSHOTS', 'DIRECTORY_AUDIOBOOKS'
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageIos(
       {required File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
-      PathProviderPlatform? pathDir}) async {
+      String? pathDirectory}) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       throw Exception('Storage permission not granted');
     }
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
+    final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
-    String localFileName = "iamage_$randomFileName(lengthFileName)";
+    String localFileName = "image_$randomFileName(lengthFileName)";
 
     String finalFilename = fileName ?? localFileName;
 
     try {
       if (Platform.isIOS) {
-        var downloadDirectoryIos = pathDir ?? await provider.getDownloadsPath();
+        var downloadDirectoryIos = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPath(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS' );
         filePath = '${downloadDirectoryIos.toString()}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
@@ -161,24 +166,24 @@ class FlutterSaver {
   /// - [lengthFileName]: The length of the randomly generated file name (default is 5).
   /// - [fileName]: Optional custom file name.
   /// - [type]: The file extension/type (default is 'jpg').
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] : "DIRECTORY_DOWNLOADS" , "DIRECTORY_PICTURES" , "DIRECTORY_MOVIES".
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveImageMacOs(
       {required File? fileImage,
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
-      PathProviderPlatform? pathDir}) async {
-    final PathProviderPlatform provider = PathProviderPlatform.instance;
+        String? pathDirectory}) async {
+    final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
-    String localFileName = "iamage_$randomFileName(lengthFileName)";
+    String localFileName = "image_$randomFileName(lengthFileName)";
 
     String finalFilename = fileName ?? localFileName;
 
     try {
       if (Platform.isMacOS) {
-        var downloadDirectoryMac = pathDir ?? await provider.getDownloadsPath();
+        var downloadDirectoryMac = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPathMacOs(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS' );
         filePath = '${downloadDirectoryMac.toString()}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
@@ -269,12 +274,14 @@ class FlutterSaver {
   ///
   /// Parameters:
   /// - [link]: The URL of the file to be downloaded.
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] : ExternalPath.DIRECTORY_MUSIC , ExternalPath.DIRECTORY_PODCASTS , ExternalPath.DIRECTORY_RINGTONES , ExternalPath.DIRECTORY_ALARMS , ExternalPath.DIRECTORY_NOTIFICATIONS
+  ///   ExternalPath.DIRECTORY_PICTURES , ExternalPath.DIRECTORY_MOVIES , ExternalPath.DIRECTORY_DOWNLOADS , ExternalPath.DIRECTORY_DCIM , ExternalPath.DIRECTORY_DOCUMENTS
+  ///   ExternalPath.DIRECTORY_SCREENSHOTS , ExternalPath.DIRECTORY_AUDIOBOOKS.
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileAndroid({
     required String link,
-    AndroidPathProvider? pathDir,
+    String? pathDirectory,
   }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -283,7 +290,9 @@ class FlutterSaver {
     File? filePath;
 
     var downloadDirectoryAndroid =
-        pathDir ?? await AndroidPathProvider.downloadsPath;
+        await ExternalPath.getExternalStoragePublicDirectory(
+          pathDirectory ?? ExternalPath.DIRECTORY_DOWNLOADS,
+        );
 
     try {
       var response = await http.get(Uri.parse(link));
@@ -351,18 +360,20 @@ class FlutterSaver {
   ///
   /// Parameters:
   /// - [link]: The URL of the file to be downloaded.
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] :
+  ///   'DIRECTORY_DOWNLOADS' , 'DIRECTORY_MUSIC', 'DIRECTORY_PODCASTS' , 'DIRECTORY_RINGTONES' , 'DIRECTORY_ALARMS' , 'DIRECTORY_NOTIFICATIONS' , 'DIRECTORY_PICTURES' , 'DIRECTORY_MOVIES' , 'DIRECTORY_DCIM' , 'DIRECTORY_DOCUMENTS', 'DIRECTORY_SCREENSHOTS', 'DIRECTORY_AUDIOBOOKS'
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileIos({
     required String link,
+    String? pathDirectory
   }) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       throw Exception('Storage permission not granted');
     }
-    final Directory downloadDirectoryIos =
-        await getApplicationDocumentsDirectory();
+    final externalPathIosMacPlugin = ExternalPathIosMac();
+
     File? filePath;
 
     try {
@@ -409,8 +420,9 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isIOS) {
+        var downloadDirectoryIos = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPath(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
         filePath = File(
-            path.join(downloadDirectoryIos.path, '$baseName$fileExtension'));
+            path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
@@ -431,13 +443,14 @@ class FlutterSaver {
   ///
   /// Parameters:
   /// - [link]: The URL of the file to be downloaded.
-  /// - [pathDir]: Optional custom download directory path.
-  ///
+  /// - [pathDirectory]: Optional custom download directory path.
+  ///   [pathDirectory] : "DIRECTORY_DOWNLOADS" , "DIRECTORY_PICTURES" , "DIRECTORY_MOVIES".
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileMac({
     required String link,
+    String? pathDirectory
   }) async {
-    final Directory? downloadDirectoryMac = await getDownloadsDirectory();
+    final externalPathIosMacPlugin = ExternalPathIosMac();
     File? filePath;
 
     try {
@@ -484,8 +497,9 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isMacOS) {
+        var downloadDirectoryMac = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPathMacOs(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
         filePath = File(
-            path.join(downloadDirectoryMac!.path, '$baseName$fileExtension'));
+            path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
