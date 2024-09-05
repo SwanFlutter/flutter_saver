@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 
 export 'package:external_path/external_path.dart';
@@ -144,7 +143,9 @@ class FlutterSaver {
 
     try {
       if (Platform.isIOS) {
-        var downloadDirectoryIos = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPath(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS' );
+        var downloadDirectoryIos = pathDirectory ??
+            await externalPathIosMacPlugin.getDirectoryPath(
+                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
         filePath = '${downloadDirectoryIos.toString()}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
@@ -174,7 +175,7 @@ class FlutterSaver {
       int lengthFileName = 5,
       String? fileName,
       String? type = 'jpg',
-        String? pathDirectory}) async {
+      String? pathDirectory}) async {
     final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
     String localFileName = "image_$randomFileName(lengthFileName)";
@@ -183,7 +184,9 @@ class FlutterSaver {
 
     try {
       if (Platform.isMacOS) {
-        var downloadDirectoryMac = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPathMacOs(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS' );
+        var downloadDirectoryMac = pathDirectory ??
+            await externalPathIosMacPlugin.getDirectoryPathMacOs(
+                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
         filePath = '${downloadDirectoryMac.toString()}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
@@ -291,8 +294,8 @@ class FlutterSaver {
 
     var downloadDirectoryAndroid =
         await ExternalPath.getExternalStoragePublicDirectory(
-          pathDirectory ?? ExternalPath.DIRECTORY_DOWNLOADS,
-        );
+      pathDirectory ?? ExternalPath.DIRECTORY_DOWNLOADS,
+    );
 
     try {
       var response = await http.get(Uri.parse(link));
@@ -364,10 +367,8 @@ class FlutterSaver {
   ///   [pathDirectory] :
   ///   'DIRECTORY_DOWNLOADS' , 'DIRECTORY_MUSIC', 'DIRECTORY_PODCASTS' , 'DIRECTORY_RINGTONES' , 'DIRECTORY_ALARMS' , 'DIRECTORY_NOTIFICATIONS' , 'DIRECTORY_PICTURES' , 'DIRECTORY_MOVIES' , 'DIRECTORY_DCIM' , 'DIRECTORY_DOCUMENTS', 'DIRECTORY_SCREENSHOTS', 'DIRECTORY_AUDIOBOOKS'
   /// Returns `true` if the file was saved successfully, otherwise `false`.
-  static Future<bool> saveFileIos({
-    required String link,
-    String? pathDirectory
-  }) async {
+  static Future<bool> saveFileIos(
+      {required String link, String? pathDirectory}) async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       throw Exception('Storage permission not granted');
@@ -420,9 +421,11 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isIOS) {
-        var downloadDirectoryIos = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPath(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
-        filePath = File(
-            path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
+        var downloadDirectoryIos = pathDirectory ??
+            await externalPathIosMacPlugin.getDirectoryPath(
+                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+        filePath =
+            File(path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
@@ -446,10 +449,8 @@ class FlutterSaver {
   /// - [pathDirectory]: Optional custom download directory path.
   ///   [pathDirectory] : "DIRECTORY_DOWNLOADS" , "DIRECTORY_PICTURES" , "DIRECTORY_MOVIES".
   /// Returns `true` if the file was saved successfully, otherwise `false`.
-  static Future<bool> saveFileMac({
-    required String link,
-    String? pathDirectory
-  }) async {
+  static Future<bool> saveFileMac(
+      {required String link, String? pathDirectory}) async {
     final externalPathIosMacPlugin = ExternalPathIosMac();
     File? filePath;
 
@@ -497,9 +498,11 @@ class FlutterSaver {
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isMacOS) {
-        var downloadDirectoryMac = pathDirectory ?? await externalPathIosMacPlugin.getDirectoryPathMacOs(directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
-        filePath = File(
-            path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
+        var downloadDirectoryMac = pathDirectory ??
+            await externalPathIosMacPlugin.getDirectoryPathMacOs(
+                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+        filePath =
+            File(path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Platform not supported');
