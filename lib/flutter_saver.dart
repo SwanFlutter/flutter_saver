@@ -12,9 +12,11 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 export 'package:external_path/external_path.dart';
 export 'package:external_path_ios_mac/external_path_ios_mac.dart';
+export 'package:permission_handler/permission_handler.dart';
 
 //// A package to save images and files to the downloads folder.
 ///
@@ -85,10 +87,27 @@ class FlutterSaver {
     String? type = 'jpg',
     String? pathDirectory,
   }) async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      throw Exception('Storage permission not granted');
+    if (Platform.isAndroid) {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt == 29) {
+          var status = await Permission.storage.request();
+          if (!status.isGranted) {
+            throw Exception('Storage permission not granted');
+          }
+        }
+      }
     }
+
+    PermissionStatus storageStatus = await Permission.storage.status;
+    if (storageStatus != PermissionStatus.granted) {
+      PermissionStatus requestResult = await Permission.storage.request();
+      if (requestResult != PermissionStatus.granted) {
+        // Handle permission permanently denied (optional)
+        openAppSettings();
+      }
+    }
+    
     String filePath = '';
     String localFileName = "image_${randomFileName(lengthFileName)}";
 
@@ -286,10 +305,27 @@ class FlutterSaver {
     required String link,
     String? pathDirectory,
   }) async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      throw Exception('Storage permission not granted');
+    if (Platform.isAndroid) {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt == 29) {
+          var status = await Permission.storage.request();
+          if (!status.isGranted) {
+            throw Exception('Storage permission not granted');
+          }
+        }
+      }
     }
+
+    PermissionStatus storageStatus = await Permission.storage.status;
+    if (storageStatus != PermissionStatus.granted) {
+      PermissionStatus requestResult = await Permission.storage.request();
+      if (requestResult != PermissionStatus.granted) {
+        // Handle permission permanently denied (optional)
+        openAppSettings();
+      }
+    }
+
     File? filePath;
 
     var downloadDirectoryAndroid =

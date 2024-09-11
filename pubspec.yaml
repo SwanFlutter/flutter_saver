@@ -17,6 +17,7 @@ dependencies:
   permission_handler: ^11.3.1
   external_path: ^2.0.1
   external_path_ios_mac: ^0.0.1
+  device_info_plus: ^10.1.2
   
 
 dev_dependencies:
