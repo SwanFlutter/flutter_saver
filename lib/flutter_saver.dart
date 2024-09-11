@@ -17,6 +17,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 export 'package:external_path/external_path.dart';
 export 'package:external_path_ios_mac/external_path_ios_mac.dart';
 export 'package:permission_handler/permission_handler.dart';
+export 'package:path/path.dart';
 
 //// A package to save images and files to the downloads folder.
 ///
@@ -107,7 +108,7 @@ class FlutterSaver {
         openAppSettings();
       }
     }
-    
+
     String filePath = '';
     String localFileName = "image_${randomFileName(lengthFileName)}";
 

@@ -18,7 +18,8 @@ dependencies:
   external_path: ^2.0.1
   external_path_ios_mac: ^0.0.1
   device_info_plus: ^10.1.2
-  
+  path: ^1.8.2
+
 
 dev_dependencies:
   flutter_test:
