@@ -1,5 +1,6 @@
 import 'dart:math';
 
+/// Returns a map of file extensions and their corresponding file name extensions.
 Map<String, String> fileExtensions = {
   'image/jpeg': '.jpg',
   'image/png': '.png',
