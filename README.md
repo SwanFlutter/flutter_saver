@@ -91,6 +91,7 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
             '.xlsx',
         '.dwg': '.dwg',
+        
       };
 ```
 
@@ -117,19 +118,38 @@ import 'package:flutter_saver/flutter_saver.dart';
 ```
 
 
-- To request permissions from the user, you can use the following code: AndroidManifest.xml.
+- Steps:
+
+1-Go to the following path in your project:
+
+```path
+android/app/src/main/AndroidManifest.xml
+```
+
+2- Make sure you add the following permissions to the AndroidManifest.xml file:
+
+- For Android versions lower than 33:
+
+```xml
+
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+```
+- For Android versions 33 and above (Android 13):
+
+```xml
+
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+```
+
+- Camera and internet access.
 
 ```xml
 
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-<uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 ```
 
@@ -164,6 +184,22 @@ add a filesystem access
 ```xml
   <key>com.apple.security.files.user-selected.read-only</key>
   <true/>
+```
+
+- Note: If you want the access permission to be displayed as soon as the application comes up, add this code.
+
+```dart
+
+  @override
+  void initState() {
+    super.initState();
+    handlePermissions().then((_) {
+      setState(() {});
+    });
+  }
+
+  // important import package = import 'package:flutter_saver/flutter_saver.dart';
+
 ```
 
 ## Additional information
