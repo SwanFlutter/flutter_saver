@@ -16,8 +16,6 @@ export 'package:path/path.dart';
 export 'package:permission_handler/permission_handler.dart';
 
 class FlutterSaver {
-  static const String defaultFileType = 'jpg';
-
   /// Gets the directory path based on the platform.
   static Future<String?> getDirectoryPath(
     String platformDirectory,
@@ -39,49 +37,57 @@ class FlutterSaver {
     throw UnsupportedError('Unsupported platform');
   }
 
-  /// Saves an image file to the downloads folder for various platforms.
-  static Future<bool> saveImage({
-    required File? fileImage,
+  /// Saves an array of image files to the downloads folder for various platforms.
+  static Future<List<({bool state, File? file})>> saveImages({
+    required List<File> files,
     int lengthFileName = 5,
     String? fileName,
-    String? type = defaultFileType,
+    String? type = 'jpg',
     String? pathDirectory,
   }) async {
-    String filePath;
-    String finalFilename = fileName ??
-        "${"".randomFileName(lengthFileName)}_${DateTime.now().toIso8601String().replaceAll(':', '-')}";
+    final List<({bool state, File? file})> results = [];
 
-    try {
-      String directoryPath;
-      if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-        directoryPath = await getDirectoryPath(
-              ExternalPath.DIRECTORY_DOWNLOADS,
-              pathDirectory,
-            ) ??
-            '';
-        filePath = '$directoryPath/$finalFilename.$type';
-        debugPrint("File path: $filePath");
-      } else if (kIsWeb || Platform.isWindows) {
-        final downloadDirectory = await getDownloadsDirectory();
-        filePath = '${downloadDirectory!.path}/$finalFilename.$type';
-        debugPrint("File path: $filePath");
-      } else {
-        throw UnsupportedError('Unsupported platform');
-      }
+    for (final fileImage in files) {
+      String filePath;
 
-      await fileImage?.copy(filePath);
-      return true;
-    } catch (e, stackTrace) {
-      debugPrint('Error saving image: $e');
-      if (kDebugMode) {
-        print('Stack Trace: $stackTrace');
+      String randomName = "".randomFileName(lengthFileName);
+      String dateNow = DateTime.now().toIso8601String().replaceAll(':', '-');
+
+      String finalFilename = fileName ?? "$randomName$dateNow";
+
+      try {
+        String directoryPath;
+        if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
+          directoryPath = await getDirectoryPath(
+                ExternalPath.DIRECTORY_DOWNLOADS,
+                pathDirectory,
+              ) ??
+              '';
+          filePath = '$directoryPath/$finalFilename.$type';
+        } else if (kIsWeb || Platform.isWindows) {
+          final downloadDirectory = await getDownloadsDirectory();
+          filePath = '${downloadDirectory!.path}/$finalFilename.$type';
+        } else {
+          throw UnsupportedError('Unsupported platform');
+        }
+
+        final savedFile = await fileImage.copy(filePath);
+        results.add((state: true, file: savedFile));
+      } catch (e, stackTrace) {
+        debugPrint('Error saving image: $e');
+        if (kDebugMode) {
+          print('Stack Trace: $stackTrace');
+        }
+        results.add((state: false, file: null));
       }
-      return false;
     }
+
+    return results;
   }
 
   /// Saves any file from a URL to the downloads folder for various platforms.
-  static Future<bool> saveFile({
+
+  static Future<({bool state, File? file})> saveFile({
     required String link,
     String? pathDirectory,
   }) async {
@@ -113,7 +119,7 @@ class FlutterSaver {
         debugPrint("File path: $filePath");
 
         await filePath.writeAsBytes(response.bodyBytes);
-        return true;
+        return (state: true, file: filePath);
       } else {
         throw UnsupportedError('Unsupported platform');
       }
@@ -122,7 +128,7 @@ class FlutterSaver {
       if (kDebugMode) {
         print('Stack Trace: $stackTrace');
       }
-      return false;
+      return (state: false, file: null);
     }
   }
 }
