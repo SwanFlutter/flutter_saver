@@ -99,7 +99,7 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.1+2
+  flutter_saver: ^0.0.1+3
 ```
 
 ```yaml
@@ -141,6 +141,10 @@ android/app/src/main/AndroidManifest.xml
 ```xml
 
 <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+<uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+<uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
 
 ```
 
@@ -186,19 +190,56 @@ add a filesystem access
   <true/>
 ```
 
-- Note: If you want the access permission to be displayed as soon as the application comes up, add this code.
+- Use this code for permissions.
 
 ```dart
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
+Future<void> handlePermissions() async {
+ // Create an instance of device_info_plus
+ DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+ AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+ int sdkInt = androidInfo.version.sdkInt;
+
+ // Check if permissions have already been granted
+ if (await Permission.photos.isGranted ||
+ await Permission.videos.isGranted ||
+ await Permission.audio.isGranted ||
+ await Permission.storage.isGranted) {
+ debugPrint('Permissions already granted.');
+ return;
+ }
+
+ // Check if permissions are permanently denied
+ if (await Permission.photos.isPermanentlyDenied ||
+ await Permission.videos.isPermanentlyDenied ||
+ await Permission.audio.isPermanentlyDenied ||
+ await Permission.storage.isPermanentlyDenied) {
+ // Request permission from settings
+ openAppSettings();
+ return;
+ }
+
+ // Check the Android version to determine the type of permissions
+ if (sdkInt >= 33) {
+ // Request permissions for Android 13 and above
+ await Permission.photos.request();
+ await Permission.videos.request();
+ await Permission.audio.request();
+ } else {
+ // Request storage permission for Android 12 and below
+ await Permission.storage.request();
+ }
+ }
 
   @override
   void initState() {
     super.initState();
-    handlePermissions().then((_) {
-      setState(() {});
-    });
+    handlePermissions();
   }
-
-  // important import package = import 'package:flutter_saver/flutter_saver.dart';
+  
 
 ```
 

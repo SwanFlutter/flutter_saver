@@ -11,3 +11,7 @@
 ## 0.0.1+2
 
 * Fix bug permission.
+
+## 0.0.1+3
+
+* Fix Bug .

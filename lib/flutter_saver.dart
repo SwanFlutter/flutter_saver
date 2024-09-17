@@ -12,13 +12,14 @@ import 'package:flutter_saver/src/tools/tools.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+//import 'package:permission_handler/permission_handler.dart';
 
 export 'package:external_path/external_path.dart';
 export 'package:external_path_ios_mac/external_path_ios_mac.dart';
 export 'package:flutter_saver/src/tools/tools.dart';
 export 'package:path/path.dart';
-export 'package:permission_handler/permission_handler.dart';
+//export 'package:permission_handler/permission_handler.dart';
 
 //// A package to save images and files to the downloads folder.
 ///
@@ -89,8 +90,6 @@ class FlutterSaver {
     String? type = 'jpg',
     String? pathDirectory,
   }) async {
-    //  await handlePermissions();
-
     String filePath = '';
     String localFileName = "image_${randomFileName(lengthFileName)}";
 
@@ -133,10 +132,6 @@ class FlutterSaver {
       String? fileName,
       String? type = 'jpg',
       String? pathDirectory}) async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      throw Exception('Storage permission not granted');
-    }
     final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
     String localFileName = "image_$randomFileName(lengthFileName)";
@@ -260,8 +255,6 @@ class FlutterSaver {
     required String link,
     String? pathDirectory,
   }) async {
-    // await handlePermissions();
-
     File? filePath;
 
     var downloadDirectoryAndroid =
@@ -313,10 +306,6 @@ class FlutterSaver {
   /// Returns `true` if the file was saved successfully, otherwise `false`.
   static Future<bool> saveFileIos(
       {required String link, String? pathDirectory}) async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      throw Exception('Storage permission not granted');
-    }
     final externalPathIosMacPlugin = ExternalPathIosMac();
 
     File? filePath;
