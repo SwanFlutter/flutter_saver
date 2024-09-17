@@ -8,20 +8,17 @@ This Flutter package provides a powerful and versatile solution for saving camer
 - use for local image
 
 ```dart
-FlutterSaver.saveImageWindowsWeb(fileImage: fileImage);
-FlutterSaver.saveImageAndroid(fileImage: fileImage);
-FlutterSaver.saveImageIos(fileImage: fileImage);
-FlutterSaver.saveImageMacOs(fileImage: fileImage);
+FlutterSaver.saveImages(fileImage: [fileImage]);
 
 ```
 
 -Example
 
 ```dart
- await FlutterSaver.saveImageWindowsWeb(
-  fileImage: fileImage,
+ await FlutterSaver.saveImages(
+  fileImage: [fileImage],
    fileName: 'example',
- type: 'jpg',
+type: 'jpg',
  );
 ```
 
@@ -30,36 +27,40 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 - use for Network
 
 ```dart
- FlutterSaver.saveFileWindowsWeb(link: link);
- FlutterSaver.saveFileAndroid(link: link);
- FlutterSaver.saveFileIos(link: link);
- FlutterSaver.saveFileMac(link: link);
+ FlutterSaver.saveFile(link: link);
 ```
 
 -Example
 
 ```dart
-  GestureDetector(
-              onTap: () async {
-                Future<bool> isSaved = FlutterSaver.saveFileAndroid(
-                    link:
-                        "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp");
+final ValueNotifier<File?> _savedImageNotifier = ValueNotifier<File?>(null);
 
-                if (await isSaved) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Image saved successfully!')),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to save image.')),
-                  );
-                }
-              },
-       child: Image.network(
-       width: 300,
-        height: 450,
-     "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp"),
-   ),
+String urlImage =
+    "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp";
+
+TextButton(
+onPressed: () async {
+final result = await FlutterSaver.saveFile(
+link: urlImage,
+);
+
+if (result.state) {
+_savedImageNotifier.value = result.file;
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(
+content: Text('Image saved successfully!'),
+),
+);
+} else {
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(
+content: Text('Failed to save image.'),
+),
+);
+}
+},
+child: const Text("Download"),
+);
 ```
 
 - suport this format
@@ -99,7 +100,7 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.1+2
+  flutter_saver: ^0.0.1+3
 ```
 
 ```yaml
