@@ -47,9 +47,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             GestureDetector(
               onTap: () async {
-                Future<bool> isSaved = FlutterSaver.saveFileAndroid(
-                    link:
-                        "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp");
+                Future<bool> isSaved = FlutterSaver.saveFile(
+                  link:
+                      "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp",
+                );
 
                 if (await isSaved) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -62,9 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
               child: Image.network(
-                  width: 300,
-                  height: 450,
-                  "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp"),
+                width: 300,
+                height: 450,
+                "https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp",
+              ),
             ),
           ],
         ),
