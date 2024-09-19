@@ -1,5 +1,3 @@
-import 'dart:math';
-
 /// Returns a map of file extensions and their corresponding file name extensions.
 Map<String, String> fileExtensions = {
   'image/jpeg': '.jpg',
@@ -26,19 +24,29 @@ Map<String, String> fileExtensions = {
       '.docx',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
   '.dwg': '.dwg',
-};
 
-/// Generates a random file name with a given length.
-///
-/// Parameters:
-/// - [length]: The length of the random file name.
-///
-/// Returns a randomly generated file name.
-String randomFileName(int length) {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  final random = Random();
-  return String.fromCharCodes(
-    Iterable.generate(
-        length, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
-  );
-}
+  // Video formats
+  'video/x-msvideo': '.avi',
+  'video/mpeg': '.mpeg',
+  'video/quicktime': '.mov',
+  'video/x-ms-wmv': '.wmv',
+  'video/x-flv': '.flv',
+  'video/webm': '.webm',
+  'video/ogg': '.ogv',
+  'video/x-matroska': '.mkv',
+  'video/3gpp': '.3gp',
+  'video/3gpp2': '.3g2',
+
+  // Audio formats
+  'audio/mpeg': '.mp3',
+  'audio/wav': '.wav',
+  'audio/x-wav': '.wav',
+  'audio/ogg': '.ogg',
+  'audio/flac': '.flac',
+  'audio/aac': '.aac',
+  'audio/mp4': '.m4a',
+  'audio/opus': '.opus',
+  'audio/x-ms-wma': '.wma',
+  'audio/x-aiff': '.aiff',
+  'audio/x-matroska': '.mka',
+};

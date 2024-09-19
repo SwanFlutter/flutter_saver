@@ -66,40 +66,63 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```dart
 {
-        'image/jpeg': '.jpg',
-        'image/png': '.png',
-        'video/mp4': '.mp4',
-        'application/pdf': '.pdf',
-        'application/zip': '.zip',
-        'image/gif': '.gif',
-        'image/webp': '.webp',
-        'image/svg+xml': '.svg',
-        'image/tiff': '.tiff',
-        'image/vnd.microsoft.icon': '.ico',
-        'image/vnd.djvu': '.djvu',
-        'image/vnd.adobe.photoshop': '.psd',
-        'image/x-ms-bmp': '.bmp',
-        'image/x-icon': '.ico',
-        'image/x-ico': '.ico',
-        'image/x-xbitmap': '.xbm',
-        'image/x-png': '.png',
-        'application/x-msdownload': '.exe',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-            '.pptx',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            '.docx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-            '.xlsx',
-        '.dwg': '.dwg',
-        
-      };
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'video/mp4': '.mp4',
+  'application/pdf': '.pdf',
+  'application/zip': '.zip',
+  'image/gif': '.gif',
+  'image/webp': '.webp',
+  'image/svg+xml': '.svg',
+  'image/tiff': '.tiff',
+  'image/vnd.microsoft.icon': '.ico',
+  'image/vnd.djvu': '.djvu',
+  'image/vnd.adobe.photoshop': '.psd',
+  'image/x-ms-bmp': '.bmp',
+  'image/x-icon': '.ico',
+  'image/x-ico': '.ico',
+  'image/x-xbitmap': '.xbm',
+  'image/x-png': '.png',
+  'application/x-msdownload': '.exe',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      '.pptx',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      '.docx',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+  '.dwg': '.dwg',
+
+  // Video formats
+  'video/x-msvideo': '.avi',
+  'video/mpeg': '.mpeg',
+  'video/quicktime': '.mov',
+  'video/x-ms-wmv': '.wmv',
+  'video/x-flv': '.flv',
+  'video/webm': '.webm',
+  'video/ogg': '.ogv',
+  'video/x-matroska': '.mkv',
+  'video/3gpp': '.3gp',
+  'video/3gpp2': '.3g2',
+
+  // Audio formats
+  'audio/mpeg': '.mp3',
+  'audio/wav': '.wav',
+  'audio/x-wav': '.wav',
+  'audio/ogg': '.ogg',
+  'audio/flac': '.flac',
+  'audio/aac': '.aac',
+  'audio/mp4': '.m4a',
+  'audio/opus': '.opus',
+  'audio/x-ms-wma': '.wma',
+  'audio/x-aiff': '.aiff',
+  'audio/x-matroska': '.mka',
+};
 ```
 
 ## Getting started
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.1+3
+  flutter_saver: ^0.0.1+4
 ```
 
 ```yaml
@@ -178,6 +201,10 @@ android:requestLegacyExternalStorage="true"
     <string>We need access to your photo library to select images for editing.</string>
     <key>NSCameraUsageDescription</key>
     <string>We need access to your camera to take photos for editing.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photos to save images.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>We need access to your documents folder to save files.</string>
 ```
 
 #### macOS installation

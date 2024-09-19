@@ -8,7 +8,8 @@ import 'dart:math';
 import 'package:external_path/external_path.dart';
 import 'package:external_path_ios_mac/external_path_ios_mac.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_saver/src/tools/tools.dart';
+import 'package:flutter_saver/src/tools/extensions/files_extensions.dart';
+import 'package:flutter_saver/src/tools/extensions/string_extensions.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -17,7 +18,6 @@ import 'package:path_provider/path_provider.dart';
 
 export 'package:external_path/external_path.dart';
 export 'package:external_path_ios_mac/external_path_ios_mac.dart';
-export 'package:flutter_saver/src/tools/tools.dart';
 export 'package:path/path.dart';
 //export 'package:permission_handler/permission_handler.dart';
 
@@ -50,7 +50,8 @@ class FlutterSaver {
     String? type = 'jpg',
   }) async {
     String filePath = '';
-    String localFileName = "image_$randomFileName(lengthFileName)";
+    String localFileName =
+        "image_${StringExtension.randomFileName(lengthFileName)}";
 
     String finalFilename = fileName ?? localFileName;
 
@@ -91,7 +92,8 @@ class FlutterSaver {
     String? pathDirectory,
   }) async {
     String filePath = '';
-    String localFileName = "image_${randomFileName(lengthFileName)}";
+    String localFileName =
+        "image_${StringExtension.randomFileName(lengthFileName)}";
 
     String finalFilename = fileName ?? localFileName;
 
@@ -134,7 +136,8 @@ class FlutterSaver {
       String? pathDirectory}) async {
     final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
-    String localFileName = "image_$randomFileName(lengthFileName)";
+    String localFileName =
+        "image_${StringExtension.randomFileName(lengthFileName)}";
 
     String finalFilename = fileName ?? localFileName;
 
@@ -175,7 +178,8 @@ class FlutterSaver {
       String? pathDirectory}) async {
     final externalPathIosMacPlugin = ExternalPathIosMac();
     String filePath = '';
-    String localFileName = "image_$randomFileName(lengthFileName)";
+    String localFileName =
+        "image_${StringExtension.randomFileName(lengthFileName)}";
 
     String finalFilename = fileName ?? localFileName;
 
