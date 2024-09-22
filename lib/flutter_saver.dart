@@ -14,12 +14,10 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-//import 'package:permission_handler/permission_handler.dart';
-
 export 'package:external_path/external_path.dart';
 export 'package:external_path_ios_mac/external_path_ios_mac.dart';
+export 'package:flutter_saver/src/tools/extensions/permissions_request.dart';
 export 'package:path/path.dart';
-//export 'package:permission_handler/permission_handler.dart';
 
 //// A package to save images and files to the downloads folder.
 ///
@@ -84,6 +82,7 @@ class FlutterSaver {
   ///   ExternalPath.DIRECTORY_PICTURES , ExternalPath.DIRECTORY_MOVIES , ExternalPath.DIRECTORY_DOWNLOADS , ExternalPath.DIRECTORY_DCIM , ExternalPath.DIRECTORY_DOCUMENTS
   ///   ExternalPath.DIRECTORY_SCREENSHOTS , ExternalPath.DIRECTORY_AUDIOBOOKS.
   /// Returns `true` if the file was saved successfully, otherwise `false`.
+
   static Future<bool> saveImageAndroid({
     required File? fileImage,
     int lengthFileName = 5,
@@ -102,9 +101,12 @@ class FlutterSaver {
         var downloadDirectoryAndroid =
             await ExternalPath.getExternalStoragePublicDirectory(
                 pathDirectory ?? ExternalPath.DIRECTORY_DOWNLOADS);
-
         filePath = '$downloadDirectoryAndroid/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
+        if (File(filePath).existsSync()) {
+          filePath =
+              '$downloadDirectoryAndroid/$finalFilename${StringExtension.randomFileName(3)}.$type';
+        }
       } else {
         throw Exception('Error saving image: Unsupported platform');
       }
@@ -147,6 +149,10 @@ class FlutterSaver {
             await externalPathIosMacPlugin.getDirectoryPath(
                 directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
         filePath = '${downloadDirectoryIos.toString()}/$finalFilename.$type';
+        if (File(filePath).existsSync()) {
+          filePath =
+              '${downloadDirectoryIos.toString()}/$finalFilename${StringExtension.randomFileName(3)}.$type';
+        }
         debugPrint("defaultPath: $filePath");
       } else {
         throw Exception('Error saving image: $e');
@@ -255,6 +261,7 @@ class FlutterSaver {
   ///   ExternalPath.DIRECTORY_PICTURES , ExternalPath.DIRECTORY_MOVIES , ExternalPath.DIRECTORY_DOWNLOADS , ExternalPath.DIRECTORY_DCIM , ExternalPath.DIRECTORY_DOCUMENTS
   ///   ExternalPath.DIRECTORY_SCREENSHOTS , ExternalPath.DIRECTORY_AUDIOBOOKS.
   /// Returns `true` if the file was saved successfully, otherwise `false`.
+
   static Future<bool> saveFileAndroid({
     required String link,
     String? pathDirectory,
@@ -275,16 +282,29 @@ class FlutterSaver {
 
       String fileName = path.basename(link);
       // ignore: unused_local_variable
-      String extension = path.extension(fileName);
+      String extensions = path.extension(fileName);
       String baseName = path.basenameWithoutExtension(fileName);
 
       String fileExtension =
           fileExtensions[response.headers['content-type']] ?? '.png';
 
       if (Platform.isAndroid) {
-        filePath = File(path.join(
-            downloadDirectoryAndroid.toString(), '$baseName$fileExtension'));
-        debugPrint("defaultPath: $filePath");
+        filePath = File(
+          path.join(
+            downloadDirectoryAndroid.toString(),
+            '$baseName$fileExtension',
+          ),
+        );
+
+        if (await filePath.exists()) {
+          filePath = File(
+            path.join(
+              downloadDirectoryAndroid.toString(),
+              '$baseName${StringExtension.randomFileName(3)}$fileExtension',
+            ),
+          );
+          debugPrint("defaultPath: $filePath");
+        }
       } else {
         throw Exception('Platform not supported');
       }
@@ -333,9 +353,22 @@ class FlutterSaver {
         var downloadDirectoryIos = pathDirectory ??
             await externalPathIosMacPlugin.getDirectoryPath(
                 directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
-        filePath =
-            File(path.join(downloadDirectoryIos!, '$baseName$fileExtension'));
-        debugPrint("defaultPath: $filePath");
+        filePath = File(
+          path.join(
+            downloadDirectoryIos!,
+            '$baseName$fileExtension',
+          ),
+        );
+
+        if (await filePath.exists()) {
+          filePath = File(
+            path.join(
+              downloadDirectoryIos,
+              '$baseName${StringExtension.randomFileName(3)}$fileExtension',
+            ),
+          );
+          debugPrint("defaultPath: $filePath");
+        }
       } else {
         throw Exception('Platform not supported');
       }

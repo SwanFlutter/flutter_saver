@@ -20,3 +20,7 @@
 
 * Editing code .
 * Add Audio & video formats to download file.
+
+## 0.0.1+5
+
+* Fix bug.

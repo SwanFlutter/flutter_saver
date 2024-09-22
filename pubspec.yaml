@@ -1,6 +1,6 @@
 name: flutter_saver
 description: "A Flutter package for saving images and downloadable links across all platforms with support for various formats."
-version: 0.0.1+4
+version: 0.0.1+5
 homepage: "https://github.com/SwanFlutter/flutter_saver"
 
 
@@ -26,6 +26,7 @@ dependencies:
   external_path_ios_mac: ^0.0.2
   device_info_plus: ^10.1.2
   path: ^1.8.2
+  permission_handler: ^11.3.1
 
 
 dev_dependencies:

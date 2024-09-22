@@ -122,7 +122,7 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.1+4
+  flutter_saver: ^0.0.1+5
 ```
 
 ```yaml
@@ -155,8 +155,17 @@ android/app/src/main/AndroidManifest.xml
 
 ```xml
 
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+<!-- For Android 10 and above, to access external storage -->
+<uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+<!-- For Android 12 and above -->
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage"/>
+
 
 ```
 - For Android versions 33 and above (Android 13):
@@ -180,6 +189,7 @@ android/app/src/main/AndroidManifest.xml
 
 ```
 
+
 - Add this line code to application AndroidManifest.xml
 
 ```xml
@@ -192,6 +202,15 @@ android:requestLegacyExternalStorage="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
+```
+
+```xml
+<queries>
+    <intent>
+        <action android:name="android.intent.action.GET_CONTENT" />
+    </intent>
+</queries>
+
 ```
 
 ### iOS
@@ -219,55 +238,20 @@ add a filesystem access
 
 - Use this code for permissions.
 
+- If you prefer, you can use the ready-made access permissions provided in the code. Otherwise,  free to write the necessary permissions yourself.
+
+// import 'package:flutter_saver/flutter_saver.dart';
+
 ```dart
-import 'package:permission_handler/permission_handler.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-
-Future<void> handlePermissions() async {
- // Create an instance of device_info_plus
- DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
- AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
- int sdkInt = androidInfo.version.sdkInt;
-
- // Check if permissions have already been granted
- if (await Permission.photos.isGranted ||
- await Permission.videos.isGranted ||
- await Permission.audio.isGranted ||
- await Permission.storage.isGranted) {
- debugPrint('Permissions already granted.');
- return;
- }
-
- // Check if permissions are permanently denied
- if (await Permission.photos.isPermanentlyDenied ||
- await Permission.videos.isPermanentlyDenied ||
- await Permission.audio.isPermanentlyDenied ||
- await Permission.storage.isPermanentlyDenied) {
- // Request permission from settings
- openAppSettings();
- return;
- }
-
- // Check the Android version to determine the type of permissions
- if (sdkInt >= 33) {
- // Request permissions for Android 13 and above
- await Permission.photos.request();
- await Permission.videos.request();
- await Permission.audio.request();
- } else {
- // Request storage permission for Android 12 and below
- await Permission.storage.request();
- }
- }
 
   @override
   void initState() {
     super.initState();
-    handlePermissions();
-  }
-  
-
+     handlePermissions().then((onValue) {
+      setState(() { });
+        });
+  } 
+     
 ```
 
 ## Additional information
