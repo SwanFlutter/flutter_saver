@@ -122,7 +122,7 @@ FlutterSaver.saveImageMacOs(fileImage: fileImage);
 
 ```yaml
 dependencies:
-  flutter_saver: ^0.0.1+6
+  flutter_saver: ^0.0.1+7
 ```
 
 ```yaml

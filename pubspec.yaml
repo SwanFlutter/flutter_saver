@@ -10,6 +10,7 @@ platforms:
   web:
   macos:
   windows:
+  linux:
 
 environment:
   sdk: '>=2.19.0 <4.0.0'

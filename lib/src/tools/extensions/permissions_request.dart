@@ -23,9 +23,15 @@ Future<void> handlePermissions() async {
         Permission.audio,
       ].request();
 
-      if (statuses[Permission.storage]!.isGranted && statuses[Permission.photos]!.isGranted && statuses[Permission.videos]!.isGranted && statuses[Permission.audio]!.isGranted) {
+      if (statuses[Permission.storage]!.isGranted &&
+          statuses[Permission.photos]!.isGranted &&
+          statuses[Permission.videos]!.isGranted &&
+          statuses[Permission.audio]!.isGranted) {
         // All permissions are granted
-      } else if (statuses[Permission.storage]!.isDenied && statuses[Permission.photos]!.isGranted && statuses[Permission.videos]!.isGranted && statuses[Permission.audio]!.isGranted) {
+      } else if (statuses[Permission.storage]!.isDenied &&
+          statuses[Permission.photos]!.isGranted &&
+          statuses[Permission.videos]!.isGranted &&
+          statuses[Permission.audio]!.isGranted) {
         // درخواست دسترسی برای مدیریت رسانه‌ها
         List<PermissionStatus> statuses = [
           await Permission.manageExternalStorage.request(),

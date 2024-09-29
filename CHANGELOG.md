@@ -27,4 +27,8 @@
 
 ## 0.0.1+6
 
-* Update pacage.
+* Update package.
+
+## 0.0.1+7
+
+* Fix pub point
