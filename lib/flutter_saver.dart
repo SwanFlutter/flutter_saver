@@ -147,7 +147,8 @@ class FlutterSaver {
       if (Platform.isIOS) {
         var downloadDirectoryIos = pathDirectory ??
             await externalPathIosMacPlugin.getDirectoryPath(
-                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+                directory:
+                    pathDirectory ?? ExternalPathIosMac.DIRECTORY_DOWNLOADS);
         filePath = '${downloadDirectoryIos.toString()}/$finalFilename.$type';
         if (File(filePath).existsSync()) {
           filePath =
@@ -193,7 +194,8 @@ class FlutterSaver {
       if (Platform.isMacOS) {
         var downloadDirectoryMac = pathDirectory ??
             await externalPathIosMacPlugin.getDirectoryPathMacOs(
-                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+                directory: pathDirectory ??
+                    ExternalPathIosMac.DIRECTORY_DOWNLOADS_MAC);
         filePath = '${downloadDirectoryMac.toString()}/$finalFilename.$type';
         debugPrint("defaultPath: $filePath");
       } else {
@@ -352,7 +354,8 @@ class FlutterSaver {
       if (Platform.isIOS) {
         var downloadDirectoryIos = pathDirectory ??
             await externalPathIosMacPlugin.getDirectoryPath(
-                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+                directory:
+                    pathDirectory ?? ExternalPathIosMac.DIRECTORY_DOWNLOADS);
         filePath = File(
           path.join(
             downloadDirectoryIos!,
@@ -414,7 +417,8 @@ class FlutterSaver {
       if (Platform.isMacOS) {
         var downloadDirectoryMac = pathDirectory ??
             await externalPathIosMacPlugin.getDirectoryPathMacOs(
-                directory: pathDirectory ?? 'DIRECTORY_DOWNLOADS');
+                directory: pathDirectory ??
+                    ExternalPathIosMac.DIRECTORY_DOWNLOADS_MAC);
         filePath =
             File(path.join(downloadDirectoryMac!, '$baseName$fileExtension'));
         debugPrint("defaultPath: $filePath");

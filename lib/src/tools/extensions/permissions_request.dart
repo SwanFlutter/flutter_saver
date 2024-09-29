@@ -23,96 +23,121 @@ Future<void> handlePermissions() async {
         Permission.audio,
       ].request();
 
-      if (statuses[Permission.storage]!.isGranted &&
-          statuses[Permission.photos]!.isGranted &&
-          statuses[Permission.videos]!.isGranted &&
-          statuses[Permission.audio]!.isGranted) {
-        // All permissions granted
-      } else {
-        // At least one permission is denied
-        if (statuses == PermissionStatus.denied) {
+      if (statuses[Permission.storage]!.isGranted && statuses[Permission.photos]!.isGranted && statuses[Permission.videos]!.isGranted && statuses[Permission.audio]!.isGranted) {
+        // All permissions are granted
+      } else if (statuses[Permission.storage]!.isDenied && statuses[Permission.photos]!.isGranted && statuses[Permission.videos]!.isGranted && statuses[Permission.audio]!.isGranted) {
+        // درخواست دسترسی برای مدیریت رسانه‌ها
+        List<PermissionStatus> statuses = [
+          await Permission.manageExternalStorage.request(),
+          await Permission.storage.request(),
+          await Permission.photos.request(),
+          await Permission.videos.request(),
+          await Permission.audio.request(),
+        ];
+
+        if (statuses == PermissionStatus.permanentlyDenied) {
           openAppSettings();
         }
       }
-    } else if (sdkInt >= 29) {
-      // درخواست دسترسی برای دوربین
-      var cameraStatus = await Permission.camera.status;
-      if (!cameraStatus.isGranted) {
-        await Permission.camera.request();
-      }
+    }
+    if (sdkInt >= 29) {
+      // Request all necessary permissions for Android 10 (SDK 29) and above
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+        Permission.camera,
+        Permission.audio,
+        Permission.manageExternalStorage, // For managing external storage
+      ].request();
 
-      // درخواست دسترسی برای ضبط صدا
-      var audioStatus = await Permission.audio.status;
-      if (!audioStatus.isGranted) {
-        await Permission.audio.request();
-      }
-
-      // درخواست دسترسی برای خواندن و نوشتن در حافظه
-      var storageStatus = await Permission.storage.status;
-      if (!storageStatus.isGranted) {
-        await Permission.storage.request();
-      }
-
-      // درخواست دسترسی برای Android 10 و بالاتر برای مدیریت رسانه‌ها
-      if (await Permission.manageExternalStorage.isRestricted ||
-          await Permission.manageExternalStorage.isDenied) {
-        await Permission.manageExternalStorage.request();
+      // Check if any permission is permanently denied, then direct to app settings
+      if (statuses.values.any((status) => status.isPermanentlyDenied)) {
+        // If any permission is permanently denied, open app settings
+        openAppSettings();
       } else {
-        // At least one permission is denied
-        if (cameraStatus == PermissionStatus.denied ||
-            audioStatus == PermissionStatus.denied ||
-            storageStatus == PermissionStatus.denied) {
-          openAppSettings();
+        // Request any denied permissions
+        if (statuses.values.any((status) => status.isDenied)) {
+          await [
+            Permission.storage,
+            Permission.camera,
+            Permission.audio,
+            Permission.manageExternalStorage,
+          ].request();
         }
       }
     } else {
-      // درخواست دسترسی برای دوربین
-      var cameraStatus = await Permission.camera.status;
-      if (!cameraStatus.isGranted) {
-        await Permission.camera.request();
-      }
+      // Access request for camera
+      // Request permissions for devices below Android 10
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+        Permission.camera,
+        Permission.audio,
+      ].request();
 
-      // درخواست دسترسی برای ضبط صدا
-      var micStatus = await Permission.audio.status;
-      if (!micStatus.isGranted) {
-        await Permission.audio.request();
-      }
-
-      // درخواست دسترسی برای خواندن و نوشتن در حافظه
-      var storageStatus = await Permission.storage.status;
-      if (!storageStatus.isGranted) {
-        await Permission.storage.request();
+      // Check if any permission is permanently denied, then direct to app settings
+      if (statuses.values.any((status) => status.isPermanentlyDenied)) {
+        openAppSettings();
+      } else {
+        // Request any denied permissions
+        if (statuses.values.any((status) => status.isDenied)) {
+          await [
+            Permission.storage,
+            Permission.camera,
+            Permission.audio,
+          ].request();
+        }
       }
     }
   } else if (Platform.isIOS) {
-    // Request permission to access photos and files on iOS and macOS
-    if (await Permission.photos.isGranted) {
-      debugPrint('Photos permission already granted.');
-      return;
-    }
+    // Request permissions for photos, videos, and audio on iOS
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.photos,
+      Permission.videos,
+      Permission.storage, // To handle saving files
+      Permission.microphone, // For audio recording
+    ].request();
 
-    if (await Permission.photos.isPermanentlyDenied) {
+    // Check if any permission is permanently denied, then open app settings
+    if (statuses.values.any((status) => status.isPermanentlyDenied)) {
       openAppSettings();
       return;
     }
 
-    await Permission.photos.request();
+    // Request any denied permissions
+    if (statuses.values.any((status) => status.isDenied)) {
+      await [
+        Permission.photos,
+        Permission.videos,
+        Permission.storage,
+        Permission.microphone,
+      ].request();
+    }
   } else if (Platform.isWindows) {
     // Permissions are not normally required on Windows, but should be checked
     debugPrint('No special permissions needed for Windows.');
   } else if (Platform.isMacOS) {
-    // Request permission to access photos and files on iOS and macOS
-    if (await Permission.photos.isGranted) {
-      debugPrint('Photos permission already granted.');
-      return;
-    }
+    // Request permissions for photos, videos, and audio on macOS
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.photos,
+      Permission.videos,
+      Permission.storage, // To handle saving files
+      Permission.microphone, // For audio recording
+    ].request();
 
-    if (await Permission.photos.isPermanentlyDenied) {
+    // Check if any permission is permanently denied, then open app settings
+    if (statuses.values.any((status) => status.isPermanentlyDenied)) {
       openAppSettings();
       return;
     }
 
-    await Permission.photos.request();
+    // Request any denied permissions
+    if (statuses.values.any((status) => status.isDenied)) {
+      await [
+        Permission.photos,
+        Permission.videos,
+        Permission.storage,
+        Permission.microphone,
+      ].request();
+    }
   } else {
     debugPrint('Unsupported platform.');
   }

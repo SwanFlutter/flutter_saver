@@ -24,3 +24,7 @@
 ## 0.0.1+5
 
 * Fix bug.
+
+## 0.0.1+6
+
+* Update pacage.
