@@ -1,3 +1,8 @@
+## 2.3.0
+
+* Fix bug gradle
+---
+
 ## 2.2.0
 
 * Migrates to built-in Kotlin: removes the `kotlin-android` plugin and replaces
