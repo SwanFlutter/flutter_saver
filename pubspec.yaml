@@ -1,0 +1,51 @@
+name: flutter_saver
+description: "A Flutter package for saving images and downloadable links across all platforms with support for various formats."
+version: 2.2.0
+homepage: https://github.com/SwanFlutter/flutter_saver
+
+environment:
+  sdk: ^3.13.1
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  web: ^1.1.1
+    # HTTP download
+  http: ^1.6.0
+  # Path utilities (file name / extension handling)
+  path: ^1.9.1
+  # XFile support (camera/gallery picks from image_picker, etc.)
+  cross_file: ^0.3.5+4
+    # Plugin platform interface
+  plugin_platform_interface: ^2.1.8
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+
+flutter:
+
+  plugin:
+    platforms:
+      android:
+        package: com.example.flutter_saver
+        pluginClass: FlutterSaverPlugin
+      ios:
+        pluginClass: FlutterSaverPlugin
+      linux:
+        pluginClass: FlutterSaverPlugin
+      macos:
+        pluginClass: FlutterSaverPlugin
+      windows:
+        pluginClass: FlutterSaverPluginCApi
+      web:
+        pluginClass: FlutterSaverWeb
+        fileName: flutter_saver_web.dart
+
+
