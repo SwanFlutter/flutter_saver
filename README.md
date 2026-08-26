@@ -25,7 +25,7 @@ One API, every platform. No per-platform branching in your code.
 
 ```yaml
 dependencies:
-  flutter_saver: ^2.3.0
+  flutter_saver: ^2.4.0
 ```
 
 ---

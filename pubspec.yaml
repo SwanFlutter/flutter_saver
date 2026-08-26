@@ -1,6 +1,6 @@
 name: flutter_saver
 description: "A Flutter package for saving images and downloadable links across all platforms with support for various formats."
-version: 2.3.0
+version: 2.4.0
 homepage: https://github.com/SwanFlutter/flutter_saver
 
 environment:

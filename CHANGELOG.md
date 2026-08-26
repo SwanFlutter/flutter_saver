@@ -1,3 +1,9 @@
+2.4.0
+
+Fix pub point
+
+---
+
 ## 2.3.0
 
 * Fix bug gradle
